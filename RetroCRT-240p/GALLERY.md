@@ -22,7 +22,6 @@ These are available in the official ES theme manager in RetroPie-Setup
 ![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Vertical_141.jpg)
 ![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Vertical_22216.jpg)
 ![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Vertical_30277.jpg)
-![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Vertical_7888.jpg)
 ![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Vertical_822.jpg)
 
 # User Submitted Pics
