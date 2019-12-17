@@ -15,7 +15,7 @@ These are available in the official ES theme manager in RetroPie-Setup
 
 ## Horizontal Theme on 15khz Arcade RGB Monitor
 
-![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/NES_Mockup.png)
+![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg)
 
 ## Vertical Theme on 15khz Arcade RGB Monitor
 
