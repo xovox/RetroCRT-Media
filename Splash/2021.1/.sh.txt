@@ -1,0 +1,173 @@
+#!/bin/bash -x
+
+project_name="RetroCRT"
+release_codename="Dark Odyssey"
+release_version="v3.0"
+project_url="https://github.com/xovox/RetroCRT"
+
+bg_fade_duration=3
+logo_fade_duration=3
+
+output_width="640"
+output_height="480"
+
+artwork="Arcade.png"
+audio="After_Burner.wav"
+animation="Rounded Neon Green and Blue lines Background.mp4"
+
+logo_primary="#39FF14"
+logo_secondary="#00FFFD"
+logo_secondary="#0000CD"
+
+if [ ! "$1" ]; then
+	exit
+fi
+
+vid_length=$1
+logo_text="$project_name"
+subtext_text="$release_codename"
+bottom_text="$project_name $release_version (c) $(date +%Y) :: $project_url"
+
+cp "$0" "$output_date".sh.txt
+
+output_date="../output/$(date +%Y%m%d_%H%M%S)"
+logo_image="$output_date.logo.png"
+subtext_image="$output_date.subtext.png"
+bottom_image="$output_date.bottom.png"
+
+#convert $artwork -scale x$[ ($output_height / 3) * 2 ]  $output_date.artwork.png
+convert $artwork -resize x$[ ($output_height / 3) * 5 ] -crop 640x480+0+0 $output_date.artwork.png
+#cp $artwork $output_date.artwork.png
+
+ convert \
+                -size 2000x2000 \
+                xc:transparent \
+                -font Lazer84 \
+                -fill "$logo_secondary" \
+                -pointsize 200 \
+                -gravity center \
+                -annotate +0+0 "$logo_text" \
+                -fill "$logo_primary" \
+                -pointsize 195 \
+                -gravity center \
+                -annotate +0+0 "$logo_text" \
+                -trim \
+		-scale 620x \
+                +repage \
+                        "$logo_image"
+
+ convert \
+                -size 2000x2000 \
+                xc:transparent \
+                -font Lazer84 \
+                -fill "$logo_primary" \
+                -pointsize 200 \
+                -gravity center \
+                -annotate +0+0 "$subtext_text" \
+                -fill "$logo_secondary" \
+                -pointsize 195 \
+                -gravity center \
+                -annotate +0+0 "$subtext_text" \
+                -trim \
+		-scale 480x \
+                +repage \
+                        "$subtext_image"
+
+ convert \
+                -size 10000x50 \
+                xc:transparent \
+                -font spleen-8x16 \
+                -fill "$logo_primary" \
+                -pointsize 16 \
+                -gravity center \
+                -annotate +0+0 "$bottom_text" \
+                -trim \
+		-scale x20 \
+                +repage \
+                        "$bottom_image"
+
+eval "$(identify -format "artwork_width=%w\nartwork_height=%h\n" "$artwork")"
+eval $(ffprobe -loglevel quiet -i "$animation" -show_entries stream=width,height -of default=nw=1 | sed 's/^/genvid_/')
+
+width_new=$[ ($genvid_height / 3) * 4 ]
+width_crop=$[ ($genvid_width - $width_new) / 2 ]
+genvid_crop=$width_new:$genvid_height:$width_crop:0
+
+eval "$(identify -format "logo_width=%w\nlogo_height=%h\n" "$logo_image")"
+eval "$(identify -format "subtext_width=%w\nsubtext_height=%h\n" "$subtext_image")"
+eval "$(identify -format "bottom_width=%w\nbottom_height=%h\n" "$bottom_image")"
+
+logo_voffset=$[ (($output_height / 3) * 2 ) - (( $logo_height / 3) * 2 ) ]
+logo_hoffset=$[ ($output_width / 2) - ($logo_width / 2) ]
+
+#subtext_voffset=$[ (($output_height / 2) - ($subtext_height / 2)) + $logo_height ]
+subtext_voffset=$[ $logo_voffset + $logo_height + (subtext_height / 2) ]
+
+subtext_hoffset=$[ ($output_width / 2) - ($subtext_width / 2) ]
+
+bottom_hoffset=$[ $output_width - $bottom_width - 20 ]
+bottom_voffset=$[ $output_height - $bottom_height - 20 ]
+bottom_hoffset=$[ ($output_width / 2) - ($bottom_width / 2) ]
+
+fadeout_start=$[ $vid_length - $bg_fade_duration ]
+
+bg_fade_out=$[ ($vid_length / 10) * 6 ]
+bg_fade_out_duration=3
+
+logo_fade_in=$[ ($vid_length / 10) * 5 ]
+logo_fade_out=$[ ($vid_length / 10) * 8 ]
+
+subtext_fade_in=$[ ($vid_length / 10) * 6 ]
+subtext_fade_out=$[ ($vid_length / 10) * 9 ]
+
+arcade_alpha="0.95"
+logo_alpha="0.85"
+
+# should swap crop with scale
+filter_complex="
+	[0]scale=-2:$output_height,crop=640:480:0:0,eq=brightness=0.06:saturation=2,fade=out:st=$bg_fade_out:d=$bg_fade_out_duration[animation];
+	[1]fade=out:st=$logo_fade_in:d=$logo_fade_duration,format=argb,geq=r='r(X,Y)':a='$arcade_alpha*alpha(X,Y)'[arcadecab];
+	[2]fade=in:st=$logo_fade_in:d=$logo_fade_duration,fade=out:st=$logo_fade_out:d=$logo_fade_duration,format=argb,geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)'[logo];
+	[3]fade=in:st=$subtext_fade_in:d=$logo_fade_duration,fade=out:st=$subtext_fade_out:d=$logo_fade_duration,format=argb,geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)'[subtext];
+	[4]fade=in:st=$subtext_fade_in:d=$logo_fade_duration,format=argb,geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)'[bottom];
+	[animation][arcadecab]overlay=0:0[firstoverlay];
+	[firstoverlay][logo]overlay=$logo_hoffset:$logo_voffset[secondoverlay];
+	[secondoverlay][subtext]overlay=$subtext_hoffset:$subtext_voffset[finalvid];
+	[finalvid][bottom]overlay=$bottom_hoffset:$bottom_voffset,fade=t=in:st=0:d=$bg_fade_duration,fade=t=out:st=$fadeout_start:d=$bg_fade_duration,fps=30;
+	[5]afade=t=in:st=0:d=$bg_fade_duration,afade=t=out:st=$fadeout_start:d=$bg_fade_duration
+		"
+
+echo "$filter_complex" > $output_date.filter.txt
+
+ffmpeg \
+	-i "$animation" \
+	-loop 1 \
+	-i "$output_date.artwork.png" \
+	-loop 1 \
+	-i "$logo_image" \
+	-loop 1 \
+	-i "$subtext_image" \
+	-loop 1 \
+	-i "$bottom_image" \
+	-i "$audio" \
+	-filter_complex \
+		"
+		$filter_complex
+		" \
+	-profile:v high \
+	-crf 20 \
+	-c:v libx264 \
+	-b:a 256k \
+	-t $vid_length \
+		$output_date.$vid_length.mp4
+
+ffprobe $output_date.$vid_length.mp4 && {
+	rm latest.mp4
+
+	ln -s $output_date.$vid_length.mp4 latest.mp4
+
+	rsync -avL --progress latest.mp4 hs1:RetroPie/splashscreens/
+	ssh -t hs1 sudo cp -v RetroPie/splashscreens/latest.mp4 /etc/
+	ssh hs1 omxplayer RetroPie/splashscreens/latest.mp4 & disown
+}
+exit

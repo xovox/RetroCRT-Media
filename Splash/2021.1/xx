@@ -1,0 +1,341 @@
+#!/bin/bash
+
+project_name="RetroCRT"
+release_codename="Dark Odyssey"
+release_version="v3.0"
+project_url="https://github.com/xovox/RetroCRT"
+author="XOVOX"
+
+fade_duration=3
+
+output_width="640"
+output_height="480"
+fps="30"
+
+logo_primary="#39FF14"
+logo_secondary="#00FFFD"
+logo_secondary="#0000CD"
+
+vid_length=$1
+
+logo_text="$project_name"
+subtext_text="$release_codename"
+bottom_text="$project_name $release_version (c) $(date +%Y) $author
+$project_url"
+
+intro_pic="Assets/Arcade.png"
+soundtrack="Assets/MBR After Burner.m4a"
+intro_vid="Assets/Rounded Neon Green and Blue lines Background.mp4"
+mbr_gif="Assets/MBR.gif"
+outro_vid="Assets/Lightning Background.mp4"
+outro_art="Assets/Warrior Man.png"
+coin_gif="Assets/Coin.gif"
+canvas_image="Assets/Canvas.png"
+
+logo_text="Assets/Logo Text.png"
+sub_text="Assets/Sub Text.png"
+bottom_text="Assets/Bottom Text.png"
+
+grid_videos=(
+/home/pi/RetroPie/media/arcade/video/joust-video.mp4
+/home/pi/RetroPie/media/arcade/video/rampage-video.mp4
+/home/pi/RetroPie/media/arcade/video/mvsc-video.mp4
+/home/pi/RetroPie/media/arcade/video/bstars2-video.mp4
+/home/pi/RetroPie/media/arcade/video/rthunder-video.mp4
+/home/pi/RetroPie/media/arcade/video/bublbobl-video.mp4
+/home/pi/RetroPie/media/arcade/video/bbmanw-video.mp4
+/home/pi/RetroPie/media/arcade/video/sailormn-video.mp4
+/home/pi/RetroPie/media/arcade/video/aburner-video.mp4
+/home/pi/RetroPie/media/arcade/video/1944-video.mp4
+/home/pi/RetroPie/media/arcade/video/outrun-video.mp4
+/home/pi/RetroPie/media/arcade/video/mario-video.mp4
+/home/pi/RetroPie/media/arcade/video/pbobble2-video.mp4
+/home/pi/RetroPie/media/arcade/video/gauntlet-video.mp4
+/home/pi/RetroPie/media/arcade/video/simpsons-video.mp4
+/home/pi/RetroPie/media/arcade/video/altbeast-video.mp4
+)
+
+#      0 160 320 480 x
+# 0
+# 120
+# 240
+# 360
+# y
+
+# snake back and forth
+grid_videos_loc=(
+x=0:y=0
+x=0:y=120
+x=0:y=240
+x=0:y=360
+x=160:y=0
+x=160:y=120
+x=160:y=240
+x=160:y=360
+x=320:y=0
+x=320:y=120
+x=320:y=240
+x=320:y=360
+x=480:y=0
+x=480:y=120
+x=480:y=240
+x=480:y=360
+)
+
+# dual spiral inwards
+grid_videos_loc=(
+	x=480:y=360
+	x=0:y=0
+	x=480:y=240
+	x=0:y=120
+	x=480:y=120
+	x=0:y=240
+	x=480:y=0
+	x=0:y=360
+	x=320:y=0
+	x=160:y=360
+	x=160:y=0
+	x=320:y=360
+	x=160:y=120
+	x=320:y=240	
+	x=160:y=240
+	x=320:y=120	
+
+)
+# randomize locations if you wish
+grid_videos_loc=(
+	$(shuf -e -- "${grid_videos_loc[@]}")
+)
+
+output_date="../output/$(date +%Y%m%d_%H%M%S)"
+
+
+map_number="0"
+# syntax:
+#	add_map [stream_type] [input_file] [map_name] [additional_filters]
+#	add_map v Assets/Video.mp4 myvideo "crop=640:480:120:0, "
+
+# how to .gif tho
+# movie=input.mp4:streams=v:seek_point=60 [inputvideo]
+# movie=image.png:streams=v:loop=1 [inputvideo]
+
+add_map() {
+	map_type="$1"
+	map_file="$2"
+	map_tag="$3"
+	map_filter="$4"
+
+	if [[ "$map_file" =~ .*.jpg|.*.jpeg|.*.png ]]; then
+		ffmpeg_args+="-loop 1 "
+	elif [[ "$map_file" =~ .*.gif ]]; then
+		ffmpeg_args+="-ignore_loop 0 "
+	fi
+
+	if [[ "$map_type" == "v" ]]; then
+		map_filter+="format=argb"
+	fi
+
+	export ffmpeg_args+="-i '$map_file' "
+	export ffmpeg_filters+="	[${map_number}:${map_type}] $map_filter [$map_tag];
+"
+
+	export ffmpeg_streams+="	$map_number	$map_file
+"
+	export map_number=$[ $map_number + 1 ]
+}
+
+add_canvas() {
+	canvas_name="$1"
+	canvas_size="$2"
+#	export ffmpeg_args+="-s 4cif "
+	#export ffmpeg_args+="-f 'lavfi'  -i 'nullsrc=s=$canvas_size:d=5' -r 25 -vframes 250 -vcodec png -pix_fmt bgra"
+	#export ffmpeg_args+="-f gdigrab "
+	export ffmpeg_args+="-f yuv420 "
+	#add_map v "'nullsrc=s=$canvas_size:d=5'" $canvas_name "alphamerge, format=gbrp, " #"format=gbrp, "
+	#add_map v "'nullsrc=s=$canvas_size:d=5'" $canvas_name "chromakey=0x70de77:0.1:0.2, "
+	#add_map v "'nullsrc=s=$canvas_size:d=5'" $canvas_name "colorkey=0x70de77:0.1:0.2, "
+	add_map v "'nullsrc=s=$canvas_size:d=5'" $canvas_name 
+
+	#add_filter "${canvas_name}raw" "${canvas_name}" alphamerge
+	#export ffmpeg_args+="-i 'nullsrc=s=$canvas_size' "
+	#export map_number=$[ $map_number + 1 ]
+#	export ffmpeg_filters+="	[${map_number}:${map_type}] $map_filter [$map_tag];
+#"
+
+#	export ffmpeg_streams+="	$map_number	$map_file
+#"
+#	export map_number=$[ $map_number + 1 ]
+}
+
+add_overlay() {
+	overlay_src="$1"
+	overlay_onto="$2"
+	overlay_name="$3"
+	overlay_args="$4"
+	if [ ! "$overlay_args" ]; then
+		overlay_args="x=0:y=0"
+	fi
+	export ffmpeg_filters+="	[$overlay_onto][$overlay_src] overlay=${overlay_args} [$overlay_name];
+"
+	export overlay_last="$overlay_name"
+}
+
+add_filter() {
+	map_src="$1"
+	map_tag="$2"
+	map_filter="$3"
+	export ffmpeg_filters+="	[$map_src] $map_filter [$map_tag];
+"
+}
+	
+finalize_video() {
+	export ffmpeg_filters+="
+	[$overlay_last] $1 [video]
+"
+#$ffmpeg_maps
+#$ffmpeg_filters
+#$ffmpeg_overlays
+
+}
+
+vidmath() {
+	bc <<< "scale=2 ;$@" | sed 's/^\./0./'
+}
+
+eval "$(identify -format "logo_width=%w\nlogo_height=%h\n"		"$logo_text")"
+eval "$(identify -format "subtext_width=%w\nsubtext_height=%h\n"	"$sub_text")"
+eval "$(identify -format "coin_width=%w\ncoin_height=%h\n"		"$coin_gif")"
+eval "$(identify -format "bottom_width=%w\nbottom_height=%h\n"		"$bottom_text")"
+eval "$(identify -format "mbr_width=%w\nmbr_height=%h\n"		"$mbr_gif" | sort | uniq)"
+
+mbr_voffset="$(vidmath "(($output_height / 10) * 2) - (( $mbr_height / 10) * 2 )")"
+mbr_hoffset="$(vidmath "($output_width / 2) - ($mbr_width / 2)")"
+
+logo_voffset="$(vidmath "(($output_height / 10) * 2) - (( $logo_height / 10) * 2 )")"
+logo_hoffset="$(vidmath "($output_width / 2) - ($logo_width / 2)")"
+
+subtext_voffset="$(vidmath "$logo_voffset + $logo_height + ($subtext_height / 4)")"
+subtext_hoffset="$(vidmath "($output_width / 2) - ($subtext_width / 2)")"
+
+coin_voffset="$(vidmath "$subtext_voffset + $subtext_height + ($coin_height * 2)")"
+coin_hoffset="$(vidmath "($output_width / 2) - ($coin_width / 2)")"
+
+bottom_voffset="$(vidmath "$output_height - $bottom_height - 20")"
+bottom_hoffset="$(vidmath "($output_width / 2) - ($bottom_width / 2)")"
+
+end_fadeout_start="$(vidmath "$vid_length - $fade_duration")"
+
+#grid_fade_in="$(vidmath "($vid_length / 100)	* 25")"
+text_fade_in="$(vidmath "($vid_length / 100)	* 50")"
+text_fade_out="$(vidmath "($vid_length / 100)	* 75")"
+
+bg_fade_out=$text_fade_in
+bg_fade_out_duration=3
+
+intro_pic_alpha="0.95"
+logo_alpha="0.85"
+
+##############################################################################
+# import our assets
+##############################################################################
+
+intro_fade_timing="fade=out:st=$text_fade_in:d=$fade_duration"
+
+add_map a "$soundtrack"		soundtrack	"volume=0.15,afade=t=in:st=0:d=$fade_duration,afade=t=out:st=$end_fadeout_start:d=$fade_duration "
+
+add_map v "$intro_vid"		introvid	"scale=-2:$output_height, $intro_fade_timing, crop=$output_width:$output_height:0:0, eq=brightness=0.06:saturation=2, frei0r=glow:0.5, "
+add_map v "$intro_pic"		intropic	"scale=$[ ($output_width / 3) * 2 ]:-2, $intro_fade_timing, geq=r='r(X,Y)':a='$intro_pic_alpha*alpha(X,Y)', "
+
+add_map v "$outro_vid"		outrovid	"crop=1440:1080:240:0, scale=$output_width:$output_height, eq=contrast=3:brightness=0.00:saturation=1, fps=5, fade=in:st=$text_fade_in:d=$fade_duration:alpha=1, fade=out:st=$text_fade_out:d=$fade_duration, geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+add_map v "$logo_text"		logotext	"fade=in:st=$text_fade_in:d=$fade_duration:alpha=1, fade=out:st=$text_fade_out:d=$fade_duration, geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+add_map v "$sub_text"		subtext		"fade=in:st=$text_fade_in:d=$fade_duration:alpha=1, fade=out:st=$text_fade_out:d=$fade_duration, geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+add_map v "$bottom_text"	bottomtext	"fade=in:st=$text_fade_in:d=$fade_duration:alpha=1, geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+
+add_map v "$mbr_gif"		mbrlogo		"fade=in:st=$text_fade_out:d=$fade_duration:alpha=1, geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+add_map v "$coin_gif"		coins		"fade=in:st=$text_fade_in:d=$fade_duration:alpha=1, geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+#add_map v "$canvas_image"	canvas		"geq=r='r(X,Y)':a='$intro_pic_alpha*alpha(X,Y)', "
+add_map v "$canvas_image"	canvas		"colorchannelmixer=aa=0.0, "
+#add_map v "Assets/Viking.png"	viking		"scale=-2:$output_height, fade=in:st=$text_fade_out:d=3:alpha=1, "
+
+##############################################################################
+# generate our grid
+##############################################################################
+
+export grid_fade_mark=5
+export grid_fade_increment=".5"
+#add_canvas gridbg 640x480
+export overlay_last=canvas
+for grid_video in {0..15} ; do
+	grid_fade_mark="$(vidmath "$grid_fade_mark + $grid_fade_increment")"
+	add_map v "${grid_videos[$grid_video]}" tv$grid_video "setpts=PTS-STARTPTS, scale=160x120, format=gbrp, lenscorrection=k1=0.2:k2=0.2, fade=in:st=$grid_fade_mark:d=3, "
+	add_overlay tv${grid_video} $overlay_last otv${grid_video} "${grid_videos_loc[$grid_video]}"
+done
+
+# iterate through our videos and map/overlay them
+#for grid_video in {14..0} ; do
+#done
+add_filter	$overlay_last	gridglow		"frei0r=glow:0.05, fade=out:st=$text_fade_in:d=$fade_duration"
+
+##############################################################################
+# generate our overlays
+##############################################################################
+
+add_overlay	outrovid	introvid		bgoverlay
+add_overlay	intropic	bgoverlay		introoverlay
+add_overlay	gridglow	introoverlay		firstsection
+add_overlay	logotext	firstsection		logooverlay		"$logo_hoffset:$logo_voffset"
+add_overlay	subtext		logooverlay		subtextoverlay		"$subtext_hoffset:$subtext_voffset"
+add_overlay	coins		subtextoverlay		coinoverlay		"$coin_hoffset:$coin_voffset"
+add_overlay	bottomtext	coinoverlay		bottomoverlay		"$bottom_hoffset:$bottom_voffset"
+add_overlay	mbrlogo		bottomoverlay		endassets		"$mbr_hoffset:$mbr_voffset"
+
+finalize_video "fade=in:st=0:d=$fade_duration,fade=out:st=$end_fadeout_start:d=$fade_duration,format=yuv420p,fps=${fps}"
+
+# this should be an ffmpeg filter
+#convert $artwork -resize x$(vidmath "($output_height / 3) * 5") -crop 640x480+0+0 $output_date.artwork.png
+
+cp "$0" "$output_date".sh.txt
+
+for i in ffmpeg.sh streams.txt filter.txt ; do
+	rm $i
+	ln -s $output_date.$i $i
+done
+
+echo "##############################################################################"
+echo
+echo "$ffmpeg_streams" | tee $output_date.streams.txt
+echo
+echo "$ffmpeg_filters" | tee $output_date.filter.txt
+echo
+echo "##############################################################################"
+
+cat << FFMPEGCLI | tee $output_date.ffmpeg.sh | bash
+ffmpeg \
+	$ffmpeg_args \
+	-filter_complex \
+		"
+		$ffmpeg_filters
+		" \
+	-profile:v high \
+	-crf 15 \
+	-c:v libx264 \
+	-b:a 256k \
+	-map [video] \
+	-map [soundtrack] \
+	-t $vid_length \
+	-preset veryfast \
+	-map_metadata 1 \
+		$output_date.$vid_length.mp4\
+	&& 
+ffprobe $output_date.$vid_length.mp4 && {
+	rm latest.$vid_length.mp4
+
+	ln -s $output_date.$vid_length.mp4 latest.$vid_length.mp4
+
+
+	rsync -avL --progress latest.$vid_length.mp4 hs1:RetroPie/splashscreens/
+	ssh -t hs1 sudo cp -v RetroPie/splashscreens/latest.$vid_length.mp4 /etc/
+	ssh hs1 omxplayer RetroPie/splashscreens/latest.$vid_length.mp4 & disown
+}
+FFMPEGCLI
+find /var/www/html/RetroCRT-Media/Splash/output -cmin +30 -exec mv -v {} /var/www/html/RetroCRT-Media/Splash/output.old/ \;

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+games="$@"
+
+target_dir=/tmp/mosaics
+
+mkdir -pv $target_dir
+
+get_video() {
+	xml_grep \
+		--text_only \
+		"/gameList/game[@id='$1']/video" \
+		/home/pi/RetroPie/roms/fba/gamelist.xml
+}
+
+for game in $games ; do
+	source_video="$(get_video $game)"
+	target_video="$target_dir/$(basename "$source_video")"
+	if [ ! -f "$target_video" ]; then
+		ffmpeg -ss 00:30 -i "$source_video" -c:v libx264 -ab 128k -vf scale=320:240,setsar=1:1,format=yuv420p -t 5 "$target_video"
+	fi
+done

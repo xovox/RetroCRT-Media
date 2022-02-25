@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for game in $@ ; do
+	xml_grep \
+		--text_only \
+		"/gameList/game[@id='$game']/video" \
+		/home/pi/RetroPie/roms/fba/gamelist.xml
+done

@@ -1,0 +1,150 @@
+#!/bin/bash
+
+grid_videos=(
+/home/pi/RetroPie/media/arcade/video/joust-video.mp4
+/home/pi/RetroPie/media/arcade/video/rampage-video.mp4
+/home/pi/RetroPie/media/arcade/video/mvsc-video.mp4
+/home/pi/RetroPie/media/arcade/video/rygar-video.mp4
+/home/pi/RetroPie/media/arcade/video/rthunder-video.mp4
+/home/pi/RetroPie/media/arcade/video/goldnaxe-video.mp4
+/home/pi/RetroPie/media/arcade/video/ddragon-video.mp4
+/home/pi/RetroPie/media/arcade/video/sailormn-video.mp4
+/home/pi/RetroPie/media/arcade/video/aburner-video.mp4
+/home/pi/RetroPie/media/arcade/video/1944-video.mp4
+/home/pi/RetroPie/media/arcade/video/outrun-video.mp4
+/home/pi/RetroPie/media/arcade/video/mario-video.mp4
+/home/pi/RetroPie/media/arcade/video/pbobble2-video.mp4
+/home/pi/RetroPie/media/arcade/video/shinobi-video.mp4
+/home/pi/RetroPie/media/arcade/video/simpsons-video.mp4
+/home/pi/RetroPie/media/arcade/video/tapper-video.mp4
+)
+
+grid_videos_loc=(
+x=0:y=0
+x=0:y=120
+x=0:y=240
+x=0:y=360
+x=160:y=0
+x=160:y=120
+x=160:y=240
+x=160:y=360
+x=320:y=0
+x=320:y=120
+x=320:y=240
+x=320:y=360
+x=480:y=0
+x=480:y=120
+x=480:y=240
+x=480:y=360
+)
+
+map_number="0"
+# syntax:
+#	add_map [stream_type] [input_file] [map_name] [additional_filters]
+#	add_map v Assets/Video.mp4 myvideo "crop=640:480:120:0, "
+
+add_map() {
+	map_type="$1"
+	map_file="$2"
+	map_tag="$3"
+	map_filter="$4"
+
+	if [[ "$map_file" =~ .*.jpg|.*.jpeg|.*.png ]]; then
+		ffmpeg_args+="-loop 1 "
+		map_filter+="format=argb"
+	elif [[ "$map_file" =~ .*.gif ]]; then
+		ffmpeg_args+="-ignore_loop 0 "
+		map_filter+="format=argb"
+	elif [[ "$map_file" =~ .*.mp4|.*.m4v|.*.mkv ]]; then
+		map_filter+="format=argb"
+	fi
+
+	ffmpeg_args+="-i '$map_file' "
+	ffmpeg_maps+="	[${map_number}:${map_type}] $map_filter [$map_tag];
+"
+
+	map_number=$[ $map_number + 1 ]
+}
+
+add_overlay() {
+	overlay_src="$1"
+	overlay_onto="$2"
+	overlay_name="$3"
+	overlay_args="$4"
+	if [ ! "$overlay_args" ]; then
+		overlay_args="x=0:y=0"
+	fi
+	ffmpeg_overlays+="	[$overlay_onto][$overlay_src] overlay=${overlay_args} [$overlay_name];
+"
+	overlay_last="$overlay_name"
+}
+
+add_filter() {
+	map_src="$1"
+	map_tag="$2"
+	map_filter="$3"
+	filter_list+="	[$map_src] $map_filter [$map_tag];
+"
+}
+	
+finalize_video() {
+	echo "[$last_overlay] $1 [video]"
+}
+
+##############################################################################
+# build our grid
+##############################################################################
+# randomize locations if you wish
+grid_videos_loc=(
+	$(shuf -e "${grid_videos_loc[$@]}")
+)
+
+# we need to lie so it overlays in the right spot
+overlay_last="introoverlay"
+
+# iterate through our videos and map/overlay them
+for grid_video in {0..15} ; do
+	add_map v ${grid_videos[$grid_video]} tv$grid_video "setpts=PTS-STARTPTS, scale=160x120, vignette, format=gbrp, lenscorrection=k1=0.2:k2=0.2, fade=in:st=$grid_fade_mark:d=$fade_duration, "
+	add_overlay tv${grid_video} $overlay_last otv${grid_video} "${grid_videos_loc[$grid_video]}"
+done
+
+
+##############################################################################
+# import our assets
+##############################################################################
+
+add_map a Assets/MBR.m4a       soundtrack    "volume=0.15,afade=t=in:st=0:d=$fade_duration,afade=t=out:st=$end_fadeout_start:d=$fade_duration, "
+
+add_map v Assets/IntroVid.mp4  introvid	"scale=-2:$output_height,        crop=$output_width:$output_height:0:0,  eq=brightness=0.06:saturation=2,        frei0r=glow:0.5, "
+add_map v Assets/IntroPic.png  intropic	"fade=out:st=$text_fade_in:d=$fade_duration,format=argb,geq=r='r(X,Y)':a='$arcade_alpha*alpha(X,Y)', "
+
+add_map v Assets/OutroVid.mp4  outrovid	"fade=in:st=$text_fade_in:d=$fade_duration, fade=out:st=$text_fade_out:d=$fade_duration, format=argb, geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+add_map v Assets/LogoText.png  logotext	"fade=in:st=$text_fade_in:d=$fade_duration,      fade=out:st=$text_fade_out:d=$fade_duration,    format=argb,    geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+add_map v Assets/SubText.png   subtext	"fade=in:st=$text_fade_in:d=$fade_duration, fade=out:st=$text_fade_out:d=$fade_duration, format=argb, geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+add_map v Assets/BottomText.png  bottomtext	"fade=in:st=$text_fade_in:d=$fade_duration, format=argb, geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+
+add_map v Assets/OutroVideo.mp4  outrivid "crop=1440:1080:240:0,   scale=$output_width:$output_height,     eq=contrast=3:brightness=0.00:saturation=1, fps=5, "
+add_map v Assets/MBRLogo.gif mbrlogo "fade=in:st=$text_fade_out:d=$fade_duration,     format=argb,    geq=r='r(X,Y)':a='$logo_alpha*alpha(X,Y)', "
+
+##############################################################################
+# generate our overlays
+##############################################################################
+
+add_overlay	outrovid	endintro		outrovidoverlay		"enable='between(t,$(vidmath "$bg_fade_out + 4"),100)'"
+
+add_filter tvoverlay endintro "fade=in:st=0:d=3, fade=out:st=$bg_fade_out:d=$bg_fade_out_duration"
+
+add_overlay	logo		outrovidoverlay		logooverlay		"$logo_hoffset:$logo_voffset"
+add_overlay	subtext		logooverlay		subtextoverlay		"$subtext_hoffset:$subtext_voffset"
+add_overlay	coins		subtextoverlay		coinoverlay		"$coin_hoffset:$coin_voffset"
+add_overlay	bottom		coinoverlay		bottomoverlay		"$bottom_hoffset:$bottom_voffset"
+add_overlay	mbr		bottomoverlay		endassets		"$mbr_hoffset:$mbr_voffset"
+
+finalize_video "fade=out:st=$end_fadeout_start:d=$fade_duration,format=yuv420p,fps=${fps}"
+
+ffmpeg_filters="
+	$ffmpeg_maps
+	$ffmpeg_overlays
+"
+
+echo ffmpeg $ffmpeg_args

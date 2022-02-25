@@ -1,0 +1,56 @@
+#!/bin/bash
+
+
+# scaling iw seems to be input width, ow seems to be output width
+
+
+# array syntax for image layout
+# [object_name]="[overlay_source],[source_x],[source_y],[image_size_relative_to_y]"
+declare -A title_screen
+title_screen=(
+	[logo_text]="title_screen,Assets/Logo.png,50,35,0.20"
+	[sub_text]="title_screen,Assets/Subtest.png,50,35,0.15"
+	[coin_text]="title_screen,Assets/Coin.gif,50,50,"
+	[bottom_text]="title_screen,Assets/Bottom.png,50,35,0.10"
+)
+
+declare -A outro_screen
+outro_screen=(
+	[mbr_logo]="Assets/MBR.gif,33,33,0.20"
+	[mbr_text]="Assets/MBR Text.png,33,50,"
+	[rp_logo]="Assets/RetroPie Logo.png,33,50,0.20"
+	[rp_text]="Assets/RetroPie Text.png,33,50,"
+)
+
+extract_array() {
+	cut -d',' -f$1 <<< "$asset_details"
+}
+
+gridmath() {
+        export grid_image_name="$1"
+        export grid_image_source="$2"
+        export grid_image_dest_x="$3"
+        export grid_image_dest_y="$4"
+
+        eval "$(identify -format "grid_image_x=%w\ngrid_image_y=%h\n" "$grid_image_source" | sort | uniq)"
+
+        grid_x="$(bc    <<< "((640 / 100) * $grid_image_dest_x) - ($grid_image_x / 2)")"
+        grid_y="$(bc    <<< "((480 / 100) * $grid_image_dest_y) - ($grid_image_y / 2)")"
+        grid_pos="x=$grid_x:y=$grid_y"
+        eval "$grid_image_name=$grid_pos"
+        if [ "$grid_x" -lt 0 -o "$grid_y" -lt 0 ]; then
+                echo "ERROR $grid_image_name grid values contain negative ($grid_pos)"
+        elif [ "$[ ($grid_image_x / 2) + $grid_x ]" -gt 640 -o "$[ ($grid_image_y / 2)+ $grid_y ]" -gt 480 ]; then
+                echo "ERROR $grid_image_name grid places image out of bounds ($grid_pos)"
+        fi 1>&2
+}
+
+export overlay_last=canvas
+for title_screen_asset in ${!title_screen[@]} ; do
+	asset_details="${title_screen[$title_screen_asset]}"
+	asset_source="$(extract_array 1)"
+	asset_xp="$(extract_array 2)"
+	asset_yp="$(extract_array 3)"
+
+        eval "$(identify -format "grid_image_x=%w\ngrid_image_y=%h\n" "$grid_image_source" | sort | uniq)"
+done

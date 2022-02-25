@@ -1,0 +1,187 @@
+[1;30m+[00m[36m+[00m[1;36m+[00m project_name=RetroCRT
+[1;30m+[00m[36m+[00m[1;36m+[00m release_codename='Dark Odyssey'
+[1;30m+[00m[36m+[00m[1;36m+[00m release_version=v3.0
+[1;30m+[00m[36m+[00m[1;36m+[00m project_url=https://github.com/xovox/RetroCRT
+[1;30m+[00m[36m+[00m[1;36m+[00m author=XOVOX
+[1;30m+[00m[36m+[00m[1;36m+[00m fade_duration=3
+[1;30m+[00m[36m+[00m[1;36m+[00m output_width=640
+[1;30m+[00m[36m+[00m[1;36m+[00m output_height=480
+[1;30m+[00m[36m+[00m[1;36m+[00m fps=30
+[1;30m+[00m[36m+[00m[1;36m+[00m logo_primary='#39FF14'
+[1;30m+[00m[36m+[00m[1;36m+[00m logo_secondary='#00FFFD'
+[1;30m+[00m[36m+[00m[1;36m+[00m logo_secondary='#0000CD'
+[1;30m+[00m[36m+[00m[1;36m+[00m vid_length=45
+[1;30m+[00m[36m+[00m[1;36m+[00m logo_text=RetroCRT
+[1;30m+[00m[36m+[00m[1;36m+[00m subtext_text='Dark Odyssey'
+[1;30m+[00m[36m+[00m[1;36m+[00m date +%Y
+[1;30m+[00m[36m+[00m[1;36m+[00m bottom_text='RetroCRT v3.0 (c) 2021 XOVOX
+https://github.com/xovox/RetroCRT'
+[1;30m+[00m[36m+[00m[1;36m+[00m intro_pic=Assets/Arcade.png
+[1;30m+[00m[36m+[00m[1;36m+[00m soundtrack='Assets/MBR After Burner.m4a'
+[1;30m+[00m[36m+[00m[1;36m+[00m intro_vid='Assets/Rounded Neon Green and Blue lines Background.mp4'
+[1;30m+[00m[36m+[00m[1;36m+[00m mbr_gif=Assets/MBR.gif
+[1;30m+[00m[36m+[00m[1;36m+[00m outro_vid='Assets/Lightning Background.mp4'
+[1;30m+[00m[36m+[00m[1;36m+[00m outro_art='Assets/Warrior Man.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m coin_gif=Assets/Coin.gif
+[1;30m+[00m[36m+[00m[1;36m+[00m canvas_image=Assets/Canvas.png
+[1;30m+[00m[36m+[00m[1;36m+[00m logo_text='Assets/Logo Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m sub_text='Assets/Sub Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m bottom_text='Assets/Bottom Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_videos=(/home/pi/RetroPie/media/arcade/video/joust-video.mp4 /home/pi/RetroPie/media/arcade/video/rampage-video.mp4 /home/pi/RetroPie/media/arcade/video/mvsc-video.mp4 /home/pi/RetroPie/media/arcade/video/bstars2-video.mp4 /home/pi/RetroPie/media/arcade/video/rthunder-video.mp4 /home/pi/RetroPie/media/arcade/video/goldnaxe-video.mp4 /home/pi/RetroPie/media/arcade/video/ddragon-video.mp4 /home/pi/RetroPie/media/arcade/video/sailormn-video.mp4 /home/pi/RetroPie/media/arcade/video/aburner-video.mp4 /home/pi/RetroPie/media/arcade/video/1944-video.mp4 /home/pi/RetroPie/media/arcade/video/outrun-video.mp4 /home/pi/RetroPie/media/arcade/video/mario-video.mp4 /home/pi/RetroPie/media/arcade/video/pbobble2-video.mp4 /home/pi/RetroPie/media/arcade/video/gauntlet-video.mp4 /home/pi/RetroPie/media/arcade/video/simpsons-video.mp4 /home/pi/RetroPie/media/arcade/video/tapper-video.mp4)
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_videos_loc=(x=0:y=0 x=0:y=120 x=0:y=240 x=0:y=360 x=160:y=0 x=160:y=120 x=160:y=240 x=160:y=360 x=320:y=0 x=320:y=120 x=320:y=240 x=320:y=360 x=480:y=0 x=480:y=120 x=480:y=240 x=480:y=360)
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_videos_loc=(x=480:y=360 x=0:y=0 x=480:y=240 x=0:y=120 x=480:y=120 x=0:y=240 x=480:y=0 x=0:y=360 x=320:y=0 x=160:y=360 x=160:y=0 x=320:y=360 x=160:y=120 x=320:y=240 x=160:y=240 x=320:y=120)
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_videos_loc=($(shuf -e -- "${grid_videos_loc[@]}"))
+[1;30m+[00m[36m+[00m[1;36m+[00m shuf -e -- x=480:y=360 x=0:y=0 x=480:y=240 x=0:y=120 x=480:y=120 x=0:y=240 x=480:y=0 x=0:y=360 x=320:y=0 x=160:y=360 x=160:y=0 x=320:y=360 x=160:y=120 x=320:y=240 x=160:y=240 x=320:y=120
+[1;30m+[00m[36m+[00m[1;36m+[00m date +%Y%m%d_%H%M%S
+[1;30m+[00m[36m+[00m[1;36m+[00m output_date=../output/20210531_081241
+[1;30m+[00m[36m+[00m[1;36m+[00m map_number=0
+[1;30m+[00m[36m+[00m[1;36m+[00m gridmath 'Assets/Logo Text.png' 30 20
+[1;30m+[00m[36m+[00m[1;36m+[00m export 'grid_image_name=Assets/Logo Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_name='Assets/Logo Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_source=30
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_source=30
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_x=20
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_x=20
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_y=
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_y=
+[1;30m+[00m[36m+[00m[1;36m+[00m identify -format 'grid_image_x=%w\ngrid_image_y=%h\n' 30
+[1;30m+[00m[36m+[00m[1;36m+[00m sort
+[1;30m+[00m[36m+[00m[1;36m+[00m uniq
+identify-im6.q16: unable to open image `30': No such file or directory @ error/blob.c/OpenBlob/2874.
+identify-im6.q16: no decode delegate for this image format `' @ error/constitute.c/ReadImage/560.
+[1;30m+[00m[36m+[00m[1;36m+[00m eval ''
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+(standard_in) 1: syntax error
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_x=
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+(standard_in) 1: syntax error
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_y=
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_pos=x=:y=
+[1;30m+[00m[36m+[00m[1;36m+[00m eval 'Assets/Logo Text.png=x=:y='
+[1;30m+[00m[36m+[00m[1;36m+[00m Assets/Logo Text.png=x=:y=
+./genvid: line 218: Assets/Logo: No such file or directory
+[1;30m+[00m[36m+[00m[1;36m+[00m '[' '' -lt 0 -o '' -lt 0 ']'
+./genvid: line 219: [: : integer expression expected
+./genvid: line 221: ( / 2) +  : syntax error: operand expected (error token is "/ 2) +  ")
+[1;30m+[00m[36m+[00m[1;36m+[00m logo_loc=
+[1;30m+[00m[36m+[00m[1;36m+[00m gridmath 'Assets/Sub Text.png' 30 35
+[1;30m+[00m[36m+[00m[1;36m+[00m export 'grid_image_name=Assets/Sub Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_name='Assets/Sub Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_source=30
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_source=30
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_x=35
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_x=35
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_y=
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_y=
+[1;30m+[00m[36m+[00m[1;36m+[00m identify -format 'grid_image_x=%w\ngrid_image_y=%h\n' 30
+[1;30m+[00m[36m+[00m[1;36m+[00m sort
+[1;30m+[00m[36m+[00m[1;36m+[00m uniq
+identify-im6.q16: unable to open image `30': No such file or directory @ error/blob.c/OpenBlob/2874.
+identify-im6.q16: no decode delegate for this image format `' @ error/constitute.c/ReadImage/560.
+[1;30m+[00m[36m+[00m[1;36m+[00m eval ''
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+(standard_in) 1: syntax error
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_x=
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+(standard_in) 1: syntax error
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_y=
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_pos=x=:y=
+[1;30m+[00m[36m+[00m[1;36m+[00m eval 'Assets/Sub Text.png=x=:y='
+[1;30m+[00m[36m+[00m[1;36m+[00m Assets/Sub Text.png=x=:y=
+./genvid: line 218: Assets/Sub: No such file or directory
+[1;30m+[00m[36m+[00m[1;36m+[00m '[' '' -lt 0 -o '' -lt 0 ']'
+./genvid: line 219: [: : integer expression expected
+./genvid: line 221: ( / 2) +  : syntax error: operand expected (error token is "/ 2) +  ")
+[1;30m+[00m[36m+[00m[1;36m+[00m subtext_loc=
+[1;30m+[00m[36m+[00m[1;36m+[00m gridmath '' 30 40
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_name=
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_name=
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_source=30
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_source=30
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_x=40
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_x=40
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_y=
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_y=
+[1;30m+[00m[36m+[00m[1;36m+[00m identify -format 'grid_image_x=%w\ngrid_image_y=%h\n' 30
+[1;30m+[00m[36m+[00m[1;36m+[00m sort
+[1;30m+[00m[36m+[00m[1;36m+[00m uniq
+identify-im6.q16: unable to open image `30': No such file or directory @ error/blob.c/OpenBlob/2874.
+identify-im6.q16: no decode delegate for this image format `' @ error/constitute.c/ReadImage/560.
+[1;30m+[00m[36m+[00m[1;36m+[00m eval ''
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+(standard_in) 1: syntax error
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_x=
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+(standard_in) 1: syntax error
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_y=
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_pos=x=:y=
+[1;30m+[00m[36m+[00m[1;36m+[00m eval =x=:y=
+[1;30m+[00m[36m+[00m[1;36m+[00m =x=:y=
+./genvid: line 218: =x=:y=: command not found
+[1;30m+[00m[36m+[00m[1;36m+[00m '[' '' -lt 0 -o '' -lt 0 ']'
+./genvid: line 219: [: : integer expression expected
+./genvid: line 221: ( / 2) +  : syntax error: operand expected (error token is "/ 2) +  ")
+[1;30m+[00m[36m+[00m[1;36m+[00m coin_loc=
+[1;30m+[00m[36m+[00m[1;36m+[00m gridmath logo_loc 'Assets/Logo Text.png' 50 20
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_name=logo_loc
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_name=logo_loc
+[1;30m+[00m[36m+[00m[1;36m+[00m export 'grid_image_source=Assets/Logo Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_source='Assets/Logo Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_x=50
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_x=50
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_y=20
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_y=20
+[1;30m+[00m[36m+[00m[1;36m+[00m identify -format 'grid_image_x=%w\ngrid_image_y=%h\n' 'Assets/Logo Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m sort
+[1;30m+[00m[36m+[00m[1;36m+[00m uniq
+[1;30m+[00m[36m+[00m[1;36m+[00m eval 'grid_image_x=620
+grid_image_y=104'
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_x=620
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_y=104
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_x=-10
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_y=28
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_pos=x=-10:y=28
+[1;30m+[00m[36m+[00m[1;36m+[00m eval logo_loc=x=-10:y=28
+[1;30m+[00m[36m+[00m[1;36m+[00m logo_loc=x=-10:y=28
+[1;30m+[00m[36m+[00m[1;36m+[00m '[' -10 -lt 0 -o 28 -lt 0 ']'
+[1;30m+[00m[36m+[00m[1;36m+[00m echo 'ERROR logo_loc grid values contain negative (x=-10:y=28)'
+ERROR logo_loc grid values contain negative (x=-10:y=28)
+[1;30m+[00m[36m+[00m[1;36m+[00m gridmath subtext_loc 'Assets/Sub Text.png' 50 35
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_name=subtext_loc
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_name=subtext_loc
+[1;30m+[00m[36m+[00m[1;36m+[00m export 'grid_image_source=Assets/Sub Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_source='Assets/Sub Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_x=50
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_x=50
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_y=35
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_y=35
+[1;30m+[00m[36m+[00m[1;36m+[00m identify -format 'grid_image_x=%w\ngrid_image_y=%h\n' 'Assets/Sub Text.png'
+[1;30m+[00m[36m+[00m[1;36m+[00m sort
+[1;30m+[00m[36m+[00m[1;36m+[00m uniq
+[1;30m+[00m[36m+[00m[1;36m+[00m eval 'grid_image_x=480
+grid_image_y=57'
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_x=480
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_y=57
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_x=60
+[1;30m+[00m[36m+[00m[1;36m+[00m bc
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_y=112
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_pos=x=60:y=112
+[1;30m+[00m[36m+[00m[1;36m+[00m eval subtext_loc=x=60:y=112
+[1;30m+[00m[36m+[00m[1;36m+[00m subtext_loc=x=60:y=112
+[1;30m+[00m[36m+[00m[1;36m+[00m '[' 60 -lt 0 -o 112 -lt 0 ']'
+[1;30m+[00m[36m+[00m[1;36m+[00m '[' 300 -gt 640 -o 140 -gt 480 ']'
+[1;30m+[00m[36m+[00m[1;36m+[00m gridmath coin_loc '' 50 50
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_name=coin_loc
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_name=coin_loc
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_source=
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_source=
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_x=50
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_x=50
+[1;30m+[00m[36m+[00m[1;36m+[00m export grid_image_dest_y=50
+[1;30m+[00m[36m+[00m[1;36m+[00m grid_image_dest_y=50
+[1;30m+[00m[36m+[00m[1;36m+[00m identify -format 'grid_image_x=%w\ngrid_image_y=%h\n' ''
+[1;30m+[00m[36m+[00m[1;36m+[00m sort
+[1;30m+[00m[36m+[00m[1;36m+[00m uniq
